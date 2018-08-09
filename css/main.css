@@ -10,7 +10,11 @@ font-family: 'Luckiest Guy', cursive;
      box-sizing: border-box;
 }
 
-
+.clearfix::after {
+     content: "";
+     display: block;
+     clear: both;
+}
 
 section.welcome {
      color: white;
@@ -32,13 +36,48 @@ section.welcome {
 }
 
 #date{
-     text-align: right;
-     padding-right: 52px;
-     padding-top: 30px;
+     text-align: center;
+     /*padding-right: 52px;*/
+     /*padding-top: 30px;*/
      font-size: 18px;
 
      letter-spacing: 3px;
 }
+
+.dateBox {
+     float: right;
+     margin-top: 50px;
+     margin-right: 30px;
+}
+
+.dateBtnWrapper{
+     display: flex;
+}
+
+.dateBtn {
+     width: 71px;
+     height: 20px;
+     opacity: 0.4;
+}
+.dateBtn:hover {
+     cursor: pointer;
+     opacity: 0.7;
+     transform: scale(1.05);
+}
+
+#prevBtn{
+     background-image: url("../images/prevBtn.png");
+     margin-right: 5px;
+
+}
+
+#prevBtn:hover{
+}
+
+#nextBtn{
+     background-image: url("../images/nextBtn.png");
+}
+
 
 h1 {
      color: rgba(250,255,251,0.58);
