@@ -2,7 +2,10 @@
 //KEY: key=wumtU3CAPhFX7hNuwpH1IA2EdrTVZoKohSz8fjtT
 
 //TODO
-// 1) function that will change date after pressing the button under the date
+// 1) function that will change date after pressing the button under the date || DONE
+// 3) Function that will check if type of url has .jpg at the end of src - to choose just these one as background src
+// 4) Function that will check if curPicDate === TodayDate, if yes - next butn disabled
+// 5) SECTION WITH ROVER PICTURES
 // 2) RWD rethink
 //
 
@@ -19,7 +22,7 @@ let currentPicDate = todaysDate;
 // ---------------------RUN
 
 
-showAPOD();
+getAPOD();
 testDays();
 console.log(currentPicDate);
 
@@ -28,22 +31,32 @@ console.log(currentPicDate);
 
 $('#date').text(currentPicDate);
 
-$('#nextBtn').on('click', () => {
-    addDay(currentPicDate);
-    $('#date').text(currentPicDate);
+
+$('#nextBtn').on('click', e => {
+    if (currentPicDate === todaysDate) {
+        // console.log(e.currentTarget);
+        e.hover(() => {
+            thisBtn.style.removeProperty();
+        })
+    } else {
+        addDay(currentPicDate);
+        $('#date').text(currentPicDate);
+        getAPOD(currentPicDate);
+    }
 });
 
 $('#prevBtn').on('click', () => {
     substractDay(currentPicDate);
     $('#date').text(currentPicDate);
+    getAPOD(currentPicDate);
 });
 
 //-----------------AJAX
 
-function showAPOD(dateOfPic) {
+function getAPOD() {
     $.ajax({
         method: 'GET',
-        url: apodUrl,
+        url: `https://api.nasa.gov/planetary/apod?date=${currentPicDate}&api_key=wumtU3CAPhFX7hNuwpH1IA2EdrTVZoKohSz8fjtT`,
         dataType: 'json',
     }).done(function (response) {
         injectApod(response);
@@ -56,7 +69,7 @@ function showAPOD(dateOfPic) {
 function testDays() {
     $.ajax({
         method: 'GET',
-        url: 'https://api.nasa.gov/planetary/apod?date=2014-9-1&api_key=wumtU3CAPhFX7hNuwpH1IA2EdrTVZoKohSz8fjtT',
+        url: `https://api.nasa.gov/planetary/apod?date=${currentPicDate}&api_key=wumtU3CAPhFX7hNuwpH1IA2EdrTVZoKohSz8fjtT`,
         dataType: 'json',
     }).done(function (response) {
         // injectApod(response);
@@ -98,9 +111,6 @@ function injectApod(apodObj) {
     // $('#date').text(apodDate);
     $('#explanation').text(apodPictureExplanation);
 
-    console.log(currentPicDate);
-    console.log([...currentPicDate]);
-
 }
 
 addDay = (dateIn) => {
@@ -108,6 +118,8 @@ addDay = (dateIn) => {
     //converted to the date object and add a day to it
     dt.setDate(dt.getDate() + 1);
 
+    //dt.getMonth()+1 ---> plus 1 because get.Month receive moth wich is indexed in array starded from 0, so to get actuall month
+    // we need to add 1
     if (dt.getDate() < 10 && (dt.getMonth() + 1) < 10) {
         date = dt.getFullYear() + "-" + '0' + (dt.getMonth() + 1) + '-' + '0' + (dt.getDate());
 
@@ -127,7 +139,8 @@ addDay = (dateIn) => {
 }
 
 
-//Takes a currentPicDate, substract a day from it and set it as a new currentPicDate
+//SUBSTRACTS DAY FROM DATE & SAVE IT IN currentPicDate, gets
+// Takes a currentPicDate, substract a day from it and set it as a new currentPicDate
 substractDay = (dateIn) => {
     let dt = new Date(dateIn);
     //converted to the date object and substract a day from it
